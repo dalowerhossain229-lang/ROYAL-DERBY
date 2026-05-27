@@ -137,7 +137,7 @@ body {
     border-bottom: none;
 }
 
-/* 🏇 ঘোড়ার ৩ডি লাইভ মোশন অবজেক্ট ভাই ভাই */
+/* 🚀 [ঘোড়ার মুখ ১০০% সোজা ফিনিশিং লাইনের দিকে ঘোরানোর মিরর বর্ম লক ভাই ভাই] */
 .horse-avatar {
     font-size: 28px;
     position: absolute;
@@ -145,10 +145,12 @@ body {
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: left 0.04s linear; /* 🚀 স্মুথ রানিং মোশন ট্র্যাকার চাবি */
+    transition: left 0.04s linear;
     z-index: 10;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    transform: scaleX(-1); /* 🔥 এটি বাম-মুখী ঘোড়াকে ওয়ান শটে আয়নার মতো উল্টে এক্কেবারে ডান মুখী সোজা করে দেবে ভাই ভাই! */
 }
+
 
 .horse-badge {
     font-size: 10px;
