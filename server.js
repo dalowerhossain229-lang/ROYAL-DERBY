@@ -122,11 +122,13 @@ app.post('/api/derby-race', async (req, res) => {
         let dbAction = "bet";
         let dbAmount = reqAmount;
 
-        if (finalStatus === "win") {
-            winAmount = Math.floor(reqAmount * winMultiplier);
+                if (finalStatus === "win") {
+            // 🚀 [রাউন্ডিং বুস্টার]: Math.floor এর পরিবর্তে Math.round করায় দশমিকের ফ্র্যাকশন অটো ওপরের সংখ্যায় প্লাস হবে ভাই ভাই!
+            winAmount = Math.round(reqAmount * winMultiplier);
             dbAction = "win";
             dbAmount = parseFloat(winAmount);
         }
+
 
         // 🚀 ৩. আপনার ওরিজিনাল পিএইচপি কোডের ডায়েরি অনুযায়ী ডেডিকেটেড পেলোড ম্যাপিং লক ভাই ভাই!
         let phpPayload = {
