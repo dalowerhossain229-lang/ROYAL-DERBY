@@ -58,8 +58,8 @@ app.post('/api/derby-race', async (req, res) => {
     const userPrediction = prediction || "HORSE_1";
 
     // 🔒 ১ থেকে ২০০০ বিডিটি পর্যন্ত কড়া বেট সিকিউরিটি ফিল্টার লক ভাই ভাই
-    if (reqAmount < 1 || reqAmount > 2000) {
-        return res.json({ success: false, message: "🚨 Invalid Bet Amount (৳১ - ৳২০০০)" });
+    if (reqAmount < 1 || reqAmount > 20000) {
+        return res.json({ success: false, message: "🚨 Invalid Bet Amount (৳১ - ৳২০০০০)" });
     }
 
     try {
