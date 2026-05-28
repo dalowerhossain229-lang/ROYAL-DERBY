@@ -98,7 +98,7 @@
             { id: "HORSE_4", name: "৪", x: 15, y: 200, color: "#f59e0b" }
         ];
 
-        function renderRaceTrack() {
+                function renderRaceTrack() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // ৪টি রেসিং ট্র্যাক লাইন ব্যাকগ্রাউন্ড ড্রয়িং
@@ -118,35 +118,38 @@
             // 🎯 ডান পাশে লাল ফিনিশিং টার্গেট লাইন বর্ম ভাই ভাই
             ctx.strokeStyle = "#ef4444";
             ctx.lineWidth = 3;
-            ctx.setLineDash([4, 4]);
             ctx.beginPath();
             ctx.moveTo(280, 0);
             ctx.lineTo(280, canvas.height);
             ctx.stroke();
-            ctx.setLineDash([]); 
 
-            // ৪টি লাকি ঘোড়ার সোজা ডিরেক্ট মুখ করে দৌড়ানোর মেকানিজম ভাই ভাই
+            // ৪টি লাকি ঘোড়ার সোজা ডিরেক্ট মুখ এবং ওপরে নম্বর ব্যাজ প্রিন্টার লক ভাই ভাই
             horses.forEach(h => {
                 ctx.save();
-                // 🚀 [ঘোড়া সোজা করার ট্রিকস]: মিরর ফ্লিপ স্কেল দিয়ে মুখ ফিনিশিং লাইনের দিকে সোজা লক ভাই ভাই!
+                // 🚀 ঘোড়াকে সোজা ট্র্যাকে ফরোয়ার্ড মুখে ট্রান্সলেট লক
                 ctx.translate(h.x, h.y);
+                
+                // ১. ঘোড়ার ইমোজি ভেক্টর প্রিন্ট (মিরর স্কেল সহ ভাই ভাই)
+                ctx.save();
                 ctx.scale(-1, 1); 
-
-                ctx.fillStyle = h.color;
                 ctx.font = "24px Arial";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 ctx.fillText("🐎", 0, 0);
                 ctx.restore();
 
-                // ঘোড়ার পেটের ভেতর সুদৃশ্য নম্বর ব্যাজ ব্যাকআপ লক
+                // 🚀 ২. [বাগ ফিক্সড নম্বর ব্যাজ]: মিরর স্কেলের বাইরে টেক্সটকে স্বাধীন রাখায় নম্বর এখন এক শটে ঘোড়ার পিঠে ভেসে উঠবে ভাই ভাই!
                 ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 9px Arial";
+                ctx.font = "bold 11px Arial";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-                ctx.fillText(h.name, h.x - 4, h.y + 1);
+                
+                // ঘোড়ার পিঠের ওপর নম্বর ফুটিয়ে তোলার পারফেক্ট এক্সিস এলাইনমেন্ট ভাই ভাই
+                ctx.fillText(h.name, 4, 1); 
+                ctx.restore();
             });
         }
+
 
         function updateRaceAnimation() {
             let raceActive = false;
