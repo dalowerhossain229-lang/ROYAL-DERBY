@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 // 🎰 [উইনগো কালার ট্রেড ওরিজিনাল ডোমেইন সিঙ্ক]
-const MAIN_SITE_URL = "https://onrender.com"; 
+const MAIN_SITE_URL = "https://betlover247.onrender.com"; 
 
 // ৪টি লাকি রেসিং ঘোড়ার মেমোরি পুল তালিকা ভাই ভাই
 const horsePool = ["HORSE_1", "HORSE_2", "HORSE_3", "HORSE_4"];
