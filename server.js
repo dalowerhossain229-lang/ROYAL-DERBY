@@ -50,50 +50,54 @@ app.get('/api/derby-balance', async (req, res) => {
     } catch (e) { return res.json({ success: false, balance: 0 }); }
 });
 
-// 🛫 ২. ৪-হর্স রেস কোর এপিআই রাউট (POST Route - জিরো ব্যালেন্স বাজি হ্যাকিং প্রতিরোধ কঠোর লক ভাই ভাই!)
+// ২. ৪-হর্স রেস কোর এপিআই রাউট (POST Route - জিরো ব্যালেন্স বাজি হ্যাকিং প্রতিরোধ কঠোর লক ভাই ভাই!)
 app.post('/api/derby-race', async (req, res) => {
-    const { userId, amount, wallet, prediction } = req.body;
+    // 🎯 ফ্রন্টএন্ড থেকে আসা ডাইনামিক গেম নেম টোকেন ক্যাচ করা হলো ভাই ভাই
+    const { userId, amount, wallet, prediction, game } = req.body;
+    
     const targetWallet = wallet || "main";
     const reqAmount = parseFloat(amount) || 50;
     const userPrediction = prediction || "HORSE_1";
+    const finalGameName = game || "Royal-Derby"; // ফলব্যাক ব্যাকআপ লক
 
-    // 🔒 ১ থেকে ২০০০ বিডিটি পর্যন্ত কড়া বেট সিকিউরিটি ফিল্টার লক ভাই ভাই
+    // 🔒 ১ থেকে ২০০০০ বিডিটি পর্যন্ত কড়া বেট সিকিউরিটি ফিল্টার লক ভাই ভাই
     if (reqAmount < 1 || reqAmount > 20000) {
         return res.json({ success: false, message: "🚨 Invalid Bet Amount (৳১ - ৳২০০০০)" });
     }
 
     try {
-        // 🔒 [ব্যালেন্স যাচাই প্রোটোকল]: বাজি ধরার আগে প্লেয়ারের একাউন্টের রিয়েল টাকা নিশ্চিত করা ভাই ভাই
+        // 🔒 [ব্যালেন্স যাচাই প্রোটোকল]: বাজি রেস করার সাথে সাথে ডাটাবেজ থেকে রিয়েল টাকা এবং ওরিজিনাল গেমের নাম কেটে নেওয়ার বর্ম লক
         const balResponse = await axios.post(`${MAIN_SITE_URL}/api_callback.php`, {
             action: "bet",
             username: userId,
-            amount: 0,
-            wallet: targetWallet
+            amount: reqAmount, // 🎯 ওরিজিনাল বাজি ধরার টাকা এখন রিয়েল পাস হবে ভাই
+            wallet: targetWallet,
+            game: finalGameName // 🎯 ওরিজিনাল গেমের নাম এখন ওয়ান-শটে মেইন সাইটের ডাটাবেজে অন ফায়ার পাস হবে ওস্তাদ!
         }, { timeout: 30000 });
         
         let currentDbBalance = 0;
         if (balResponse.data && balResponse.data.status === "ok" && balResponse.data.balance !== undefined) {
             currentDbBalance = parseFloat(balResponse.data.balance);
         } else {
-            return res.json({ success: false, balance: 0, message: "❌ Database Sync Error! Please refresh and try again." });
+            return res.json({ success: false, balance: 0, message: "X Database Sync Error! Please refresh." });
         }
 
         // 🔒 [কঠোর লক বর্ম]: পকেটে বাজি ধরার চেয়ে কম টাকা থাকলে গেম ডিরেক্ট রিফিউজড ভাই ভাই!
-        if (currentDbBalance < reqAmount) {
-            return res.json({ success: false, balance: currentDbBalance, message: "❌ Insufficient Balance! Please Recharge BDT." });
+        if (currentDbBalance < 0) {
+            return res.json({ success: false, balance: currentDbBalance, message: "X Insufficient Balance!" });
         }
 
-        // 🎯 [ভবিষ্যৎ সেন্ট্রাল গোপন এডমিন প্যানেল গেটওয়ে লিঙ্ক লক]
+        // 🎯 [ভবিষ্যৎ সেন্ট্রাল গোপন এডমিন প্যানেল সেটআপ লিংক লক]
         let adminTriggeredPrize = (balResponse.data && balResponse.data.derby_target) ? balResponse.data.derby_target : null;
 
         let selectedHorseWinner, finalStatus, winMultiplier;
         let isLoopActive = true;
         let loopSafety = 0;
 
-        // 🎰 [🎰 ৯৫% ওরিজিনাল RTP ও সুষম হর্স র্যান্ডমাইজেশন লুপ ভাই ভাই]
+        // 🎰 [৯৫% ওরিজিনাল RTP ও সুষম হর্স র্যান্ডমাইজেশন লুপ ভাই ভাই]
         while (isLoopActive && loopSafety < 200) {
             loopSafety++;
-            
+
             selectedHorseWinner = horsePool[Math.floor(Math.random() * horsePool.length)];
 
             if (userPrediction === selectedHorseWinner) {
