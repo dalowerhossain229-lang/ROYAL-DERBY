@@ -262,16 +262,18 @@
             requestAnimationFrame(updateRaceAnimation);
 
             try {
-                const response = await fetch(`${SERVER_URL}/api/derby-race`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: urlUserId,
-                        amount: parseFloat(currentBet),
-                        wallet: urlWallet,
-                        prediction: selectedHorse
-                    })
-                });
+                        const response = await fetch(`${SERVER_URL}/api/derby-race`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: urlUserId,
+                betAmount: parseFloat(currentBet),
+                wallet: urlWallet,
+                betOnHorse: selectedHorse,
+                game: urlParams.get('game') || "Royal-Derby" // 🎯 [মেগা ডাইনামিক গেম নেম লক]: ওয়ান-শটে ওরিজিনাল গেমের নাম ব্যাকএন্ডে পাস হবে ভাই ভাই
+            })
+        });
+
 
                 const data = await response.json();
 
