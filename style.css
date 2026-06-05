@@ -1,0 +1,276 @@
+/* ==========================================
+   ১. গেমের মূল বডি ও লেআউট ফিক্স (মোবাইল স্ক্রিন লক)
+   ========================================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100dvh; /* মোবাইলের ব্রাউজার বারের হিসাবসহ সঠিক ডাইনামিক হাইট */
+    overflow: hidden;
+    background-color: #05070c;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.header {
+    display: none !important;
+}
+
+body {
+    background: radial-gradient(circle at center, #0f1424 0%, #05070c 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* কন্টেন্ট যেন নিচে ফুটারের পেছনে না চলে যায় */
+    height: 100dvh;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: url('bg.png') no-repeat center center/cover;
+    opacity: 0.12;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ==========================================
+   ২. ঘোড়দৌড় রেসিং ট্র্যাক এবং লেন কনফিগারেশন
+   ========================================== */
+.game-board-container {
+    position: relative;
+    z-index: 1; 
+    width: calc(100% - 24px);
+    max-width: 450px;
+    height: 230px; /* মোবাইলে জায়গা বাঁচাতে সামান্য কমানো হলো */
+    margin: 10px auto 5px auto;
+    background: rgba(10, 16, 30, 0.85);
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 14px;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 5px 0;
+    box-sizing: border-box;
+}
+
+.race-lane-track {
+    position: relative;
+    width: 100%;
+    height: 40px; /* মোবাইলে ওভারফ্লো ফিক্স করার জন্য */
+    border-bottom: 1px dashed rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+.race-lane-track:last-child { border-bottom: none; }
+
+.finish-line-marker {
+    position: absolute;
+    right: 40px;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
+    z-index: 10;
+}
+
+.derby-horse-node {
+    position: absolute;
+    left: 15px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 900;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.3);
+    z-index: 20;
+    transition: left 0.1s linear;
+    transform: scaleX(-1);
+}
+
+.horse-1 { background: radial-gradient(circle, #f87171 0%, #ef4444 100%); border: 2px solid #ff9999; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+.horse-2 { background: radial-gradient(circle, #60a5fa 0%, #3b82f6 100%); border: 2px solid #99ccff; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+.horse-3 { background: radial-gradient(circle, #4ade80 0%, #22c55e 100%); border: 2px solid #99ffbb; box-shadow: 0 0 12px rgba(34,197,94,0.5); }
+.horse-4 { background: radial-gradient(circle, #fbbf24 0%, #d97706 100%); border: 2px solid #fef08a; box-shadow: 0 0 12px rgba(217,119,6,0.5); }
+
+/* ==========================================
+   ৩. ৪টি বাজি ধরার চিপস বাটন ও স্ট্যাটাস মেসেজ
+   ========================================== */
+.betting-board {
+    position: relative;
+    z-index: 10; 
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 5px 12px;
+    max-width: 450px;
+    margin: 5px auto;
+    width: calc(100% - 24px);
+    box-sizing: border-box;
+}
+
+.bet-board-btn {
+    background: linear-gradient(180deg, #141926 0%, #0c0f17 100%);
+    border: 2px solid #20283b;
+    border-radius: 12px;
+    padding: 10px 2px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-h1 { border-color: #ef4444; } .btn-h1 .board-label { color: #f87171; }
+.btn-h2 { border-color: #3b82f6; } .btn-h2 .board-label { color: #60a5fa; }
+.btn-h3 { border-color: #22c55e; } .btn-h3 .board-label { color: #4ade80; }
+.btn-h4 { border-color: #d97706; } .btn-h4 .board-label { color: #fbbf24; }
+
+.board-label { font-size: 11px; font-weight: 800; letter-spacing: 0.3px; }
+.board-odds { font-size: 11px; font-weight: 700; color: #ffaa00; }
+
+.bet-board-btn.active-side-bet {
+    border: 3px solid #ffaa00 !important;
+    background: linear-gradient(180deg, #2a2213 0%, #151008 100%) !important;
+    box-shadow: 0 0 18px #ffaa00 !important;
+    transform: scale(1.03);
+}
+.bet-board-btn.active-side-bet .board-label { color: #ffaa00 !important; font-weight: 900 !important; }
+
+/* লাইভ মেসেজ বার (নিচে সেভ জোন মার্জিন দেওয়া হয়েছে) */
+.win-status-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 10px;
+    /* এই মার্জিনটি ফুটারের ধাক্কা থেকে বাটনগুলোকে সেভ জোনে তুলে রাখবে */
+    margin: 5px 12px 95px 12px !important; 
+    background: rgba(9, 12, 18, 0.6);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+#win-text-msg { font-size: 11px; font-weight: 700; color: #38bdf8; letter-spacing: 0.3px; }
+
+.win-glow-bar { border-color: rgba(0, 255, 136, 0.4) !important; background: rgba(0, 255, 136, 0.05) !important; }
+.win-glow-bar #win-text-msg { color: #00ff88 !important; }
+.lose-glow-bar { border-color: rgba(255, 51, 102, 0.4) !important; background: rgba(255, 51, 102, 0.05) !important; }
+.lose-glow-bar #win-text-msg { color: #ff3366 !important; }
+
+/* ==========================================
+   ৪. মেইন গেম কন্ট্রোল প্যানেল ফুটার (১০০% ফিক্সড)
+   ========================================== */
+.footer-controls {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #07090e;
+    border-top: 1px solid #161b29;
+    /* মোবাইল ব্রাউজারের নেভিগেশন বারের ওপর বাটন ভাসিয়ে রাখার সেফ প্যাডিং */
+    padding: 12px 15px calc(15px + env(safe-area-inset-bottom)) 15px !important;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.7);
+    box-sizing: border-box;
+}
+
+.play-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    max-width: 450px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.bet-btn-nav {
+    background: #111522;
+    border: 1px solid #20293d;
+    color: #ffaa00;
+    font-size: 22px;
+    font-weight: 800;
+    width: 46px;  
+    height: 46px; 
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.bet-btn-nav:hover:not(:disabled) { background: #1c2336; border-color: #ffaa00; }
+.bet-btn-nav:active:not(:disabled) { transform: scale(0.92); }
+
+.play-btn {
+    flex: 1;
+    background: linear-gradient(180deg, #ffbb00 0%, #d48800 100%);
+    color: #000000;
+    font-size: 16px;
+    font-weight: 900;
+    border: none;
+    height: 46px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(212, 136, 0, 0.3);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.play-btn:hover:not(:disabled) { background: linear-gradient(180deg, #ffcc33 0%, #e69500 100%); box-shadow: 0 6px 15px rgba(212, 136, 0, 0.5); }
+.play-btn:active:not(:disabled) { transform: scale(0.95); }
+
+.play-btn:disabled, 
+.bet-btn-nav:disabled {
+    background: #141721 !important;
+    border: 1px solid #1f2536 !important;
+    color: #4b5563 !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+    transform: none !important;
+    opacity: 0.5;
+}
+
+.icon-group { display: flex; align-items: center; }
+.icon-btn {
+    background: #111522;
+    border: 1px solid #20293d;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffaa00;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.icon-btn.active { background: #ffaa00; color: #000000; box-shadow: 0 0 10px rgba(255,170,0,0.4); }
