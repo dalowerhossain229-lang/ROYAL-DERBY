@@ -188,53 +188,102 @@ body::before {
     color: #38bdf8;
     letter-spacing: 0.3px;
 }
-
-/* 🎛️ নিচের মেইন গেম কন্ট্রোল প্যানেল ফুটার */
+/* 🎛️ মেইন গেম কন্ট্রোল প্যানেল ফুটার */
 .footer-controls {
-    position: relative;
-    z-index: 50; 
+    position: fixed; /* স্ক্রিনের নিচে ফিক্সড করে রাখার জন্য */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100; /* যেন অন্য কোনো এলিমেন্টের নিচে না ঢাকা পড়ে */
     background: #07090e;
     border-top: 1px solid #161b29;
-    padding: 10px 15px 25px 15px;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+    
+    /* safe-area-inset-bottom আইফোন বা আধুনিক মোবাইলের নিচের নচ/বার থেকে বাটনকে নিরাপদ দূরত্বে রাখবে */
+    padding: 12px 15px calc(12px + env(safe-area-inset-bottom)) 15px;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.7);
+    box-sizing: border-box;
 }
 
 .play-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 12px; /* মোবাইল টাচের জন্য গ্যাপ সামান্য বাড়ানো হয়েছে */
     max-width: 450px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .bet-btn-nav {
     background: #111522;
     border: 1px solid #20293d;
     color: #ffaa00;
-    font-size: 18px;
+    font-size: 20px; /* মোবাইলে স্পষ্ট দেখার জন্য সাইজ সামান্য বড় করা হয়েছে */
     font-weight: 800;
-    width: 40px;
-    height: 40px;
+    width: 46px;  /* মোবাইল টাচ টার্গেট (Touch Target) বড় করার জন্য ৪৬টি পিক্সেল করা হয়েছে */
+    height: 46px; 
     border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* বাটন যেন ছোট বা চ্যাপ্টা না হয়ে যায় */
+    -webkit-tap-highlight-color: transparent; /* মোবাইলে টাচ করার সময়কার ডিফল্ট নীল বক্স দূর করবে */
+}
+
+/* প্লাস-মাইনাস বাটন হোভার ও অ্যাক্টিভ ইফেক্ট */
+.bet-btn-nav:hover:not(:disabled) {
+    background: #1c2336;
+    border-color: #ffaa00;
+}
+
+.bet-btn-nav:active:not(:disabled) {
+    transform: scale(0.92);
 }
 
 .play-btn {
     flex: 1;
     background: linear-gradient(180deg, #ffbb00 0%, #d48800 100%);
     color: #000000;
-    font-size: 15px;
+    font-size: 16px; /* মোবাইলে পড়ার সুবিধার জন্য */
     font-weight: 900;
     border: none;
-    padding: 12px 0;
+    height: 46px; /* প্লাস-মাইনাস বাটনের সাথে হাইট মেলানো হয়েছে */
     border-radius: 10px;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(212, 136, 0, 0.3);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* প্লে বাটন হোভার ও অ্যাক্টিভ ইফেক্ট */
+.play-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ffcc33 0%, #e69500 100%);
+    box-shadow: 0 6px 15px rgba(212, 136, 0, 0.5);
+}
+
+.play-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+/* ডিসেবলড স্টেট */
+.play-btn:disabled, 
+.bet-btn-nav:disabled {
+    background: #141721 !important;
+    border: 1px solid #1f2536 !important;
+    color: #4b5563 !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+    transform: none !important;
+    opacity: 0.5;
+}
+
     box-shadow: 0 4px 10px rgba(212,136,0,0.3);
     transition: all 0.15s ease;
 }
